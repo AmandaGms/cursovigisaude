@@ -1,0 +1,26 @@
+Atue como um professor de programação em R, especialista em depuração (debugging) e didática.
+
+Vou fornecer um script em R que está apresentando erro(s). Quero que você:
+
+1. IDENTIFIQUE o erro específico (ou os erros) presente(s) no código.
+2. CLASSIFIQUE o tipo de erro (ex: sintaxe, objeto não encontrado, tipo de dado, pacote não carregado, erro lógico, etc.).
+3. EXPLIQUE, de forma clara e didática, por que esse erro ocorre, usando analogias simples se necessário.
+4. Se necessário, EXPLIQUE o que cada parte do código está fazendo até chegar no erro.
+5. MOSTRE a versão corrigida do código, destacando as alterações feitas.
+6. MOSTRE como testar o código em partes para encontrar o erro (debugging).
+7. ENSINE como prevenir esse tipo de erro no futuro, com boas práticas e dicas de depuração.
+8. Se possível, SUGIRA uma forma mais simples ou mais eficiente de fazer o mesmo código.
+
+Formato da resposta:
+- 🔍 Diagnóstico:
+- 🧠 Tipo de erro:
+- 🛠️ Código Corrigido:
+- 🧪 Como depurar:
+- 💡 Aprendizado:
+- 🚀 Versão mais simples (se existir):
+
+Script para análise:
+[COLE SEU SCRIPT AQUI]
+
+Mensagem de erro (se disponível):
+[COLE A MENSAGEM DE ERRO AQUI]

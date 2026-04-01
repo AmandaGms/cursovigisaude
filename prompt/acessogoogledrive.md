@@ -26,7 +26,7 @@
       script em r
       acesso completo como editor)}
 
-#EXEMPLO DE CÓDIGO!!!!
+# EXEMPLO DE CÓDIGO!!!!
 
 install.packages("remotes")
 remotes::install_github("danicat/read.dbc")

@@ -1,1 +1,17 @@
+#1 - Criar script que confira para que pasta o projeto está apontando e, caso a pasta não exista, crie a pasta; e caso, a pasta já exista configure para a pasta de trabalho correta.
 
+
+
+#2 - Construção de um prompt para buscar e esclarecer erros em um script R
+
+
+#3- 3 - Propor o else para o script abaixo:
+
+for (pkg in required_packages) {
+if (!require(pkg, character.only = TRUE)) {
+install.packages(pkg, dependencies = TRUE)
+library(pkg, character.only = TRUE)
+}
+}
+
+#4 - Refatorar o script de forma tal que o CRUD que funcione de forma modular

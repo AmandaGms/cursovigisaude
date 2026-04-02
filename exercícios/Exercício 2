@@ -1,5 +1,54 @@
 #1 - Criar script que confira para que pasta o projeto está apontando e, caso a pasta não exista, crie a pasta; e caso, a pasta já exista configure para a pasta de trabalho correta.
+# FUNÇÃO: Configurar diretório do projeto de forma inteligente
+configurar_projeto <- function(caminho, criar_se_nao_existir = TRUE, mostrar_status = TRUE) {
+  
+  # Validação: o caminho deve ser character (texto)
+  if (!is.character(caminho)) {
+    stop("❌ O caminho deve ser um texto (string).")
+  }
+  
+  # Verificar se a pasta existe
+  pasta_existe <- dir.exists(caminho)
+  
+  # Lógica principal
+  if (pasta_existe) {
+    # Caso 1: Pasta já existe
+    setwd(caminho)
+    if (mostrar_status) {
+      cat("✅ Pasta encontrada! Diretório configurado para:\n  ", getwd(), "\n")
+    }
+  } else {
+    # Caso 2: Pasta não existe
+    if (criar_se_nao_existir) {
+      # Criar a pasta (e subpastas)
+      dir.create(caminho, recursive = TRUE)
+      setwd(caminho)
+      if (mostrar_status) {
+        cat("📁 Pasta não existia. Criada e configurada:\n  ", getwd(), "\n")
+      }
+    } else {
+      # Usuário optou por NÃO criar
+      stop("❌ A pasta '", caminho, "' não existe e 'criar_se_nao_existir' está FALSE.")
+    }
+  }
+  
+  # Retornar o caminho atual invisivelmente (para usar em pipes, se quiser)
+  invisible(getwd())
+}
 
+# EXEMPLOS DE USO:
+
+# Exemplo 1: Usar com caminho simples
+configurar_projeto("C:/meu_projeto/teste")
+
+# Exemplo 2: Caminho com subpastas (cria automaticamente)
+configurar_projeto("projetos/2024/analise_clientes")
+
+# Exemplo 3: Sem mensagens (silencioso)
+configurar_projeto("C:/projeto_silencioso", mostrar_status = FALSE)
+
+# Exemplo 4: Não criar se não existir (dá erro controlado)
+# configurar_projeto("C:/pasta_que_nao_existe", criar_se_nao_existir = FALSE)
 
 
 #2 - Construção de um prompt para buscar e esclarecer erros em um script R

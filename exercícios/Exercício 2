@@ -36,15 +36,224 @@ cat(paste("\nID da pasta:", PASTA_ID))
 
 
 #2 - Construção de um prompt para buscar e esclarecer erros em um script R
+Atue como um professor de programação em R, especialista em depuração (debugging) e didática.
 
+Vou fornecer um script em R que está apresentando erro(s). Quero que você:
+
+1. IDENTIFIQUE o erro específico (ou os erros) presente(s) no código.
+2. CLASSIFIQUE o tipo de erro (ex: sintaxe, objeto não encontrado, tipo de dado, pacote não carregado, erro lógico, etc.).
+3. EXPLIQUE, de forma clara e didática, por que esse erro ocorre, usando analogias simples se necessário.
+4. Se necessário, EXPLIQUE o que cada parte do código está fazendo até chegar no erro.
+5. MOSTRE a versão corrigida do código, destacando as alterações feitas.
+6. MOSTRE como testar o código em partes para encontrar o erro (debugging).
+7. ENSINE como prevenir esse tipo de erro no futuro, com boas práticas e dicas de depuração.
+8. Se possível, SUGIRA uma forma mais simples ou mais eficiente de fazer o mesmo código.
+
+Formato da resposta:
+- 🔍 Diagnóstico:
+- 🧠 Tipo de erro:
+- 🛠️ Código Corrigido:
+- 🧪 Como depurar:
+- 💡 Aprendizado:
+- 🚀 Versão mais simples (se existir):
+
+Script para análise:
+[COLE SEU SCRIPT AQUI]
+
+Mensagem de erro (se disponível):
+[COLE A MENSAGEM DE ERRO AQUI]
 
 #3- 3 - Propor o else para o script abaixo:
 
 for (pkg in required_packages) {
-if (!require(pkg, character.only = TRUE)) {
-install.packages(pkg, dependencies = TRUE)
-library(pkg, character.only = TRUE)
-}
+  if (!require(pkg, character.only = TRUE)) {
+    # Pacote NÃO está instalado
+    cat(paste("Pacote", pkg, "não encontrado. Instalando...\n"))
+    install.packages(pkg, dependencies = TRUE)
+    library(pkg, character.only = TRUE)
+    cat(paste("✓", pkg, "instalado e carregado com sucesso!\n"))
+  } else {
+    # Pacote JÁ está instalado
+    cat(paste("✓", pkg, "já está instalado e foi carregado\n"))
+  }
 }
 
 #4 - Refatorar o script de forma tal que o CRUD que funcione de forma modular
+
+# -------------------------------
+# 1) DEPENDÊNCIAS
+# -------------------------------
+instalar_pacotes <- function() {
+  if (!require("googledrive")) install.packages("googledrive")
+  if (!require("gargle")) install.packages("gargle")
+  
+  library(googledrive)
+  library(gargle)
+}
+
+# -------------------------------
+# 2) AUTENTICAÇÃO
+# -------------------------------
+autenticar_drive <- function() {
+  drive_auth(
+    scopes = "https://www.googleapis.com/auth/drive",
+    cache = ".secrets",
+    use_oob = TRUE
+  )
+}
+
+# -------------------------------
+# 3) CONECTAR À PASTA
+# -------------------------------
+conectar_pasta <- function(pasta_id) {
+  pasta <- drive_get(as_id(pasta_id))
+  cat("Conectado à pasta:", pasta$name, "\n")
+  return(pasta)
+}
+
+# -------------------------------
+# 4) LISTAR ARQUIVOS
+# -------------------------------
+listar_arquivos <- function(pasta_id) {
+  arquivos <- drive_ls(as_id(pasta_id))
+  print(arquivos)
+  return(arquivos)
+}
+
+# -------------------------------
+# 5) CRIAR PASTA
+# -------------------------------
+criar_pasta <- function(nome_pasta, pasta_id) {
+  pasta <- drive_mkdir(
+    name = nome_pasta,
+    path = as_id(pasta_id)
+  )
+  return(pasta)
+}
+
+# -------------------------------
+# 6) UPLOAD DE ARQUIVO
+# -------------------------------
+upload_arquivo <- function(nome_local, nome_drive, pasta_id, conteudo) {
+  writeLines(conteudo, nome_local)
+  
+  arquivo <- drive_upload(
+    media = nome_local,
+    path  = as_id(pasta_id),
+    name  = nome_drive
+  )
+  
+  return(arquivo)
+}
+
+# -------------------------------
+# 7) ATUALIZAR ARQUIVO
+# -------------------------------
+atualizar_arquivo <- function(arquivo, nome_local, novo_conteudo) {
+  writeLines(novo_conteudo, nome_local)
+  
+  drive_update(
+    file  = arquivo,
+    media = nome_local
+  )
+}
+
+# -------------------------------
+# 8) RENOMEAR
+# -------------------------------
+renomear_arquivo <- function(arquivo, novo_nome) {
+  arquivo <- drive_rename(
+    file = arquivo,
+    name = novo_nome
+  )
+  return(arquivo)
+}
+
+# -------------------------------
+# 9) DOWNLOAD
+# -------------------------------
+baixar_arquivo <- function(arquivo, caminho) {
+  drive_download(
+    file      = arquivo,
+    path      = caminho,
+    overwrite = TRUE
+  )
+}
+
+# -------------------------------
+# 10) DELETAR
+# -------------------------------
+deletar_item <- function(item) {
+  drive_rm(as_id(item$id))
+}
+
+# -------------------------------
+# 11) LIMPEZA LOCAL
+# -------------------------------
+limpar_temp <- function(...) {
+  file.remove(...)
+}
+
+# -------------------------------
+# 12) PIPELINE PRINCIPAL
+# -------------------------------
+executar_fluxo <- function(pasta_id) {
+  
+  # Conectar
+  conectar_pasta(pasta_id)
+  
+  # Listar
+  listar_arquivos(pasta_id)
+  
+  # Criar pasta
+  nova_pasta <- criar_pasta("Nova_Pasta_R_Teste", pasta_id)
+  
+  # Upload
+  arquivo <- upload_arquivo(
+    nome_local = "exemplo.txt",
+    nome_drive = "exemplo_original.txt",
+    pasta_id   = pasta_id,
+    conteudo   = "Arquivo criado via R no Google Colab"
+  )
+  
+  # Atualizar
+  atualizar_arquivo(
+    arquivo,
+    "exemplo_atualizado.txt",
+    "Conteúdo atualizado via R"
+  )
+  
+  # Renomear
+  arquivo <- renomear_arquivo(
+    arquivo,
+    "exemplo_final.txt"
+  )
+  
+  # Download
+  baixar_arquivo(
+    arquivo,
+    "arquivo_baixado.txt"
+  )
+  
+  # Deletar
+  deletar_item(arquivo)
+  deletar_item(nova_pasta)
+  
+  # Limpeza
+  limpar_temp(
+    "exemplo.txt",
+    "exemplo_atualizado.txt",
+    "arquivo_baixado.txt"
+  )
+  
+  cat("\n--- Fluxo executado com sucesso! ---\n")
+}
+
+# -------------------------------
+# 13) EXECUÇÃO
+# -------------------------------
+PASTA_ID <- "link pasta no google drive"
+
+instalar_pacotes()
+autenticar_drive()
+executar_fluxo(PASTA_ID)

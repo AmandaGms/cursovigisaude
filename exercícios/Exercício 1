@@ -1,0 +1,200 @@
+#Exercício 1
+
+notas <- c(8.5, 7.0, 9.2, 6.8, 8.0, 7.5, 9.0, 5.5, 8.8, 7.2)
+
+notas_arredondadas <- round(notas, digits = 1)
+
+  #ordem crescente
+  sort(notas)
+  
+  # do maior para menor
+  notass <- sort(notas)
+  rev(notass)
+  
+  #média/ mediana/ mais alta/ mais baixa/ desvio padrão
+  mean(notas)
+  
+  median(notas)
+  
+  max(notas)
+  
+  min(notas)
+  
+  sd(notas)
+  
+  #frequência
+  
+  summary(notas)
+  
+  #média nota arredondada é igual a média da nota normal?
+   média_notas <-mean(notas_arredondadas) == mean(notas)
+  print(média_notas)
+
+#EXERCÍCIO 2
+  
+  #carregar conjunto de dados
+  data(mtcars)
+
+  #explorar estrutura de dados
+  str(mtcars)
+
+  #obter informações básicas sobre variáveis
+  summary(mtcars)
+  
+  #calcular estatísticas descritivas
+  mean(mtcars$mpg)
+  median(mtcars$mpg)
+  sd(mtcars$mpg)
+  min(mtcars$mpg)
+  max(mtcars$mpg)
+  
+  #ordenar dados
+  sort(mtcars$mpg) 
+  rev(mtcars$mpg)
+ 
+  #criar sequência de números
+  seq(1,10, by=2)
+  seq(5,15, by=3)
+  
+  #repetir elementos
+  rep(7,4)
+  rep('a',10)
+  
+  #converter maiúsculas e minúsculas
+  nome_carro <- rownames(mtcars)
+  toupper(nome_carro)  
+  tolower(nome_carro)
+  
+  
+#EXERCICIO 3
+ 
+  install.packages('pacman')
+  pacman::p_load('tidyverse','readr', 'microdatasus','remotes')
+  remotes::install_github("rfsaldanha/microdatasus")
+  
+
+   #dados do SINASC
+
+  sinasc<- fetch_datasus(year_start = 2015,
+                       year_end = 2015,
+                       uf = "DF",
+                       information_system = "SINASC")
+  
+
+  
+  #Função do pacote microdatasus para pré-processar os dados coletados
+  sinasc_df <- process_sinasc(sinasc)
+  
+  #Lê o cabeçalho dos bancos de dados
+  head(sinasc_df)
+  
+  #Sumariza o conjunto de dados
+  summary(sinasc)
+  
+  #média mensal de nascimentos
+  nasc_mes <-sinasc_df %>%
+    mutate(DTNASC = as.Date(DTNASC))%>%
+    mutate(mes=floor_date(DTNASC, "month")) %>%
+    count(mes)
+  
+#EXERCICIO 4
+  
+  pacientes <- c('João da Silva', 'Maria Souza Santos', 'Pedro Henrique Alves', 'Ana Clara Oliveira')
+  data_atendimento <- c('2024-07-12', '2024-07-12', '2024-07-12', '2024-07-11')
+ 
+  
+  arquivo_pacientes <- arquivo_pacientes %>%
+    mutate(
+      partes_nome = strsplit(pacientes, " "),
+      primeiro_nome = sapply(partes_nome, function(x) x[1]),
+      ultimo_nome = sapply(partes_nome, function(x) x[length(x)])
+    )
+  
+
+  write.csv(arquivo_pacientes, "dados_pacientes.csv", row.names = FALSE)
+  
+#EXERCICIO 5
+  sinasc_to<- fetch_datasus(year_start = 2019,
+                         year_end = 2019,
+                         uf = "TO",
+                         information_system = "SINASC")
+  
+  
+  
+  #Função do pacote microdatasus para pré-processar os dados coletados
+  sinasc_to <- process_sinasc(sinasc_to)
+  
+  
+  #média mensal de nascimentos
+    taxa_natalidade <- sinasc_to%>%
+    count(ORIGEM)%>%
+    mutate(tx_natalidade=(n/1572866)*1000)
+   
+  #EXERCICIO DOS PROGRAMAS 
+    # Nomes dos programas
+    programas <- c(
+      "Programa Mais Médicos",
+      "Programa Saúde da Família",
+      "Programa Saúde na Escola"
+    )
+    
+    # Objetivos
+    objetivos <- c(
+      "Ampliar o acesso à atenção básica com médicos em áreas vulneráveis",
+      "Fortalecer a atenção primária com equipes multiprofissionais",
+      "Promover saúde e prevenção no ambiente escolar"
+    )
+    
+    # Público-alvo
+    publico_alvo <- c(
+      "População de áreas remotas e vulneráveis",
+      "Famílias cadastradas na atenção básica",
+      "Estudantes da rede pública"
+    )
+    
+    # Orçamento anual 
+    orcamento <- c(
+      2500,  
+      15000, 
+      500    
+    )
+    
+    # Datas de início
+    data_inicio <- as.Date(c(
+      "2013-07-08",
+      "1994-01-01",
+      "2007-12-05"
+    ))
+    
+    # Datas de fim 
+    data_fim <- as.Date(c(
+      NA,
+      NA,
+      NA
+    ))
+    
+    lista_programas <- list(programas, objetivos, publico_alvo, orcamento, data_inicio, data_fim)
+   
+    str(lista_programas)
+    
+    programas_df <- data.frame(
+      programas,
+      objetivos,
+      publico_alvo,
+      orcamento,
+      data_inicio,
+      data_fim
+    )
+    
+    #orçamento total
+    orcamento_total <- programas_df%>%
+      summarise(total= sum(orcamento))
+    
+    #programa com maior orçamento
+    max(programas_df$orcamento)
+    
+    #programas em andamento
+    programas_df%>%
+      filter(is.na(data_fim))%>%
+      select(programas)      
+    

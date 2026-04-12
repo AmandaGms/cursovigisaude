@@ -1,0 +1,49 @@
+#1 - Organizar a pasta de arquivos conforme estrutura (dados, docs, scripts), criar o NotebookLM com as referências, criar gems (criar agente Gemini)
+
+      Pasta com banco de dados, e script:
+      https://drive.google.com/drive/folders/1-0xuHOdaMSa1dxBK_YKZeJn9xV54cbE_?usp=sharing
+      
+      NotebookLM: 
+      https://notebooklm.google.com/notebook/e400f007-79ee-4808-97e8-733b167a325c
+      
+      Agente gemini:
+      https://gemini.google.com/gem/1lke28TqF4bKPRW0xXIGhw4SrlX9karE2?usp=sharing
+
+#2 - Criar o script de descrição dos dados raw e documentar a seleção das variáveis em planilha com o novo dicionário (justificativa)
+    
+      Descrição das variáveis: https://docs.google.com/spreadsheets/d/1BkTAQTOaco8VsCmc5eUadTwQcz5l9SXi3omfYCCdQ8I/edit?usp=sharing
+    
+        Exemplo tirado do script:
+          
+          install.packages("remotes")
+          remotes::install_github("danicat/read.dbc")
+          library(read.dbc)
+        
+        # Lista do banco de dados de sífilis gestacional (2015-2024)
+        arquivos <- c(
+          "/content/SIFGBR15.dbc",
+          "/content/SIFGBR16.dbc",
+          "/content/SIFGBR17.dbc",
+          "/content/SIFGBR18.dbc",
+          "/content/SIFGBR19.dbc",
+          "/content/SIFGBR20.dbc",
+          "/content/SIFGBR21.dbc",
+          "/content/SIFGBR22.dbc",
+          "/content/SIFGBR23.dbc",
+          "/content/SIFGBR24.dbc"
+        )
+        lista_dados <- lapply(arquivos, read.dbc)
+        
+        # Juntar dataframes 
+        dados_unicos <- do.call(rbind, lista_dados)
+
+        dados_df <- dados_unicos %>%
+        filter(SG_UF==53)
+
+        #descrição raw
+        str(dados_df)
+        summary(dados_df)
+
+#3 - Crie os scripts para exportar as análises para pdf e #4 - Crie o modelo Rmd para o seu boletim 
+
+Em anexo. 

@@ -1,0 +1,140 @@
+---
+title: ""
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+    theme: flatly
+---
+
+```{r setup, message=FALSE, warning=FALSE, echo=FALSE}
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(read.dbc)
+```
+
+<style>
+.header-box {
+  background-color: #cc5500;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.sub-header {
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.box {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-left: 5px solid #cc5500;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+h1, h2 {
+  color: #cc5500;
+}
+</style>
+
+<div class="header-box">
+BOLETIM EPIDEMIOLÓGICO
+
+<div class="sub-header">
+Sífilis em Gestantes no Distrito Federal (2015–2024)
+</div>
+</div>
+
+<br>
+
+<div style="
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #555555;
+  font-weight: 500;
+">
+  Atualizado em: `r format(Sys.Date(), "%d/%m/%Y")` por Amanda Gomes
+</div>
+
+# Introdução
+
+<div class="box" style="text-align: justify;">
+
+A sífilis em gestante é uma infecção bacteriana sistêmica causada pelo <i>Treponema pallidum</i>., cuja detecção e tratamento oportunos são pilares fundamentais para a prevenção da sífilis congênita e de desfechos gestacionais desfavoráveis, como o abortamento e a natimortalidade
+. No Brasil, a notificação compulsória dessa condição foi instituída em 2005, visando monitorar a eficácia da assistência pré-natal e subsidiar estratégias para a eliminação da transmissão vertical
+
+A transmissão ocorre majoritariamente por via transplacentária e sua probabilidade é influenciada pelo estágio clínico da doença na gestante, sendo mais elevada nas fases primária e secundária
+. O diagnóstico precoce, realizado preferencialmente no primeiro trimestre da gestação através de testes treponêmicos e não treponêmicos, aliado ao tratamento adequado com Penicilina G benzatina, constitui a estratégia mais eficaz para garantir a saúde do conceito
+
+O Distrito Federal monitora continuamente esses indicadores para orientar o planejamento de políticas públicas. Este boletim tem como objetivo descrever o perfil epidemiológico da sífilis gestacional no DF entre 2015 e 2024, analisando variáveis sociodemográficas, clínicas e laboratoriais para identificar lacunas no controle da infecção e no tratamento das parcerias sexuais
+.
+
+</div>
+
+# Metodologia
+
+<div class="box" style="text-align: justify;">
+
+Trata-se de um estudo descritivo realizado com base em dados secundários provenientes do Sistema de Informação de Agravos de Notificação (SINAN)
+. Foram analisados os casos notificados de sífilis em gestantes residentes no Distrito Federal, abrangendo o período de diagnóstico de 2015 a 2024
+
+O processamento, a tabulação e as análises estatísticas foram realizados utilizando a linguagem R, garantindo a precisão no tratamento dos dados e na elaboração dos gráficos
+
+.
+</div>
+
+# Resultados
+
+## Casos por ano
+
+```{r plot-casos-ano, echo=FALSE, warning=FALSE, message=FALSE}
+dados_df %>%
+  count(NU_ANO) %>%
+  ggplot(aes(x = NU_ANO, y = n, group = 1)) +
+  geom_line(color = "#E07A3F", linewidth = 1) +
+  geom_point(color = "#E07A3F", size = 2) +
+  theme_minimal() +
+  labs(
+    title = "Casos por ano",
+    x = "Ano",
+    y = "Número de casos"
+  )
+```
+
+## Idade das gestantes
+
+```{r plot-idade, echo=FALSE}
+dados_df %>%
+  mutate(idade = as.numeric(stringr::str_sub(as.character(NU_IDADE_N), 2, 4))) %>%
+  filter(!is.na(idade), idade > 0, idade < 60) %>%
+  count(idade) %>%
+  ggplot(aes(x = idade, y = n)) +
+  geom_col(fill = "#F6C28B") +
+  theme_minimal() +
+  labs(
+    title = "Distribuição por idade",
+    x = "Idade",
+    y = "Número de casos"
+  )
+```
+
+# Conclusão
+
+<div class="box" style="text-align: justify;">
+
+Os resultados evidenciam a importância do monitoramento contínuo da sífilis em gestantes e o fortalecimento das ações de vigilância em saúde.
+
+</div>
+
+# Fonte dos dados
+
+Datasus (SINAN)
